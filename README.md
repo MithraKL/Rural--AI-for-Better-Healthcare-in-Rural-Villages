@@ -1,187 +1,234 @@
-# Rural Healthcare Management System
+# RuralCare AI
 
-An intelligent nervous system for rural healthcare, connecting data to decisions and transforming reactive crisis management into proactive preventive care across every village.
+**AI-Powered Rural Healthcare Decision Intelligence**
 
-## Product Vision
+> Not a chatbot. Not a BI dashboard. A decision-support system that detects hidden rural
+> healthcare gaps, predicts risk, explains *why*, prioritizes villages, recommends
+> interventions, and optimizes limited resources for maximum expected impact.
 
-To become the intelligent nervous system of rural healthcare, connecting data to decisions and transforming reactive crisis management into proactive preventive care across every village.
+---
 
-## Target Audience
+## The Problem
 
-- **District Health Officers**: Managing multiple villages and coordinating healthcare resources
-- **Frontline Health Workers**: Including Anganwadi staff, ASHA workers, and ANM personnel
-- **Policy Makers**: Responsible for rural healthcare resource allocation and program design
+India has large amounts of rural healthcare data across Rural Health Statistics (RHS),
+HMIS, NFHS, DLHS, AHS and Anganwadi datasets — but these datasets are fragmented and
+reporting-oriented. A village can have a Sub-Centre or PHC on paper while healthcare
+delivery on the ground remains poor. **Infrastructure availability does not imply
+effective healthcare delivery.**
 
-## Core Features
+District Health Officers need more than dashboards showing *where* problems are — they
+need to know **why** a village is at risk, **what will happen next**, **what to do about
+it**, and **which action gives the greatest expected impact under limited resources.**
 
-- **Health Records Management**: Complete CRUD operations for patient health records
-- **Village Management**: Track and manage rural villages with population and location data
-- **Health Worker Management**: Manage frontline healthcare workers and their assignments
-- **Data-Driven Insights**: Connect health data to enable informed decision-making
+## The Solution — Decision Loop
+
+```
+DATA (RHS/HMIS/NFHS/DLHS/AHS/Anganwadi)
+   │
+   ▼
+DATA FUSION  ──  Geographic Harmonization Layer (state → district → block → village → facility)
+   │
+   ▼
+HEALTHCARE GAP DETECTOR  ──  7-dimension Gap Index (Infra, Workforce, Service, Utilization,
+   │                          Outcomes, Nutrition, Accessibility) — normalized, weighted, transparent
+   ▼
+INFRASTRUCTURE-OUTCOME PARADOX DETECTOR  ──  flags "looks fine on paper, isn't working" villages
+   │
+   ▼
+RISK PREDICTION (ML)  ──  RandomForest over historical quarter-over-quarter trends
+   │
+   ▼
+EXPLAINABLE AI  ──  "WHY is this village high risk?" — ranked, interpretable driver contributions
+   │
+   ▼
+VILLAGE PRIORITIZATION  ──  risk × population × severity × trend
+   │
+   ▼
+INTERVENTION RECOMMENDATION  ──  problem → concrete action catalogue (never generic advice,
+   │                              never infrastructure-first)
+   ▼
+INTERVENTION OPTIMIZATION  ──  cost / time / impact / "impact-per-resource" ranking
+   │
+   ▼
+RESOURCE OPTIMIZER  ──  greedy allocation of a limited budget/workforce/MMU/vaccine pool
+   │                     across villages to maximize expected aggregate impact
+   ▼
+WHAT-IF SIMULATOR  ──  interactive scenario comparison, before → projected
+   │
+   ▼
+DECISION
+```
+
+## USP
+
+Most systems answer *"where is the problem?"*. RuralCare AI answers the full chain:
+**where → why → what next → what should we do → which action gives the greatest expected
+impact with limited resources.**
+
+Its signature finding is the **Infrastructure-Outcome Paradox**: villages where
+infrastructure looks adequate on paper but service utilization, delivery and outcomes
+remain poor — the exact blind spot that reporting-oriented dashboards miss.
+
+## Architecture
+
+```
+/backend        FastAPI service
+  /api          Route handlers (villages, risk, predictions, explanations, interventions,
+                simulation, resources, priorities, facilities, data, dashboard, early-warning,
+                methodology)
+  /models       SQLAlchemy ORM: geography, facilities, per-source metrics, derived intelligence tables
+  /services     Gap Index, Paradox Detector, Prioritization, Intervention Engine, Resource
+                Mismatch Detection, Early Warning, GenAI Explainer, pipeline orchestration
+  /ml           RandomForest risk model + interpretable-ML explainability
+  /simulation   What-If simulator (deterministic, diminishing-returns model)
+  /optimization Greedy resource allocation optimizer
+  /data         CSV/Excel/JSON ingestion pipeline + synthetic demo data generator
+
+/frontend       React + TypeScript + Tailwind CSS decision console
+  /src/pages    Overview, Village Intelligence, Village Profile, Risk & Prediction,
+                Hidden Gaps, Intervention Planner, What-If Simulator, Resource Optimizer,
+                Facilities, Data Explorer, Methodology
+  /src/components  Map (Leaflet), charts (Recharts), layout, shared UI primitives
+
+/data
+  /raw          Drop real official datasets here
+  /processed    Cleaned/normalized outputs
+  /sample       Bundled synthetic demo CSVs (generated by backend/data/demo_generator.py)
+
+/scripts        seed_db.py — generates demo data, loads it, and runs the full AI pipeline
+/tests          pytest suite: gap index, paradox detection, prioritization, intervention
+                matching, resource optimization, What-If simulation, API smoke tests
+/docs           Architecture notes and demo script
+```
+
+## AI / ML Components
+
+| Layer | Technique | Notes |
+|---|---|---|
+| Gap Index | Rule-based normalization + configurable weighted scoring | `backend/services/weights.json`, transparent, not a black box |
+| Paradox Detection | Threshold-based rule engine over normalized scores | Never claims causality — "possible contributing factors" |
+| Risk Prediction | `RandomForestRegressor` (scikit-learn) over pooled quarter-over-quarter transitions | No LLM performs numerical prediction anywhere |
+| Explainability | Global feature importances × per-village deviation from mean, normalized | Interpretable ML, degrades to "insufficient data" honestly |
+| Prioritization | Weighted composite (risk, population, severity, trend) | |
+| Intervention Recommendation | Problem → catalogue mapping with cost/time/impact | Infrastructure expansion only proposed when Infrastructure score is genuinely poor |
+| Resource Optimization | Greedy heuristic (priority × impact-per-resource) | Explicitly documented as a heuristic, not an exact LP solver |
+| What-If Simulation | Diminishing-returns combination of intervention effects × funding/dosage multiplier | All outputs labeled "model-estimated / projected" |
+| GenAI | Structured-result → natural-language narration only | Deterministic template fallback out of the box; pluggable IBM watsonx.ai interface (`backend/services/genai_explainer.py`) for narration only — never numeric prediction, diagnosis or fabricated statistics |
+
+## Datasets
+
+Supports RHS, HMIS, NFHS, DLHS, AHS and Anganwadi. Each source keeps its **real-world
+geographic granularity** — RHS/HMIS/Anganwadi are village-level; NFHS/DLHS/AHS are
+district-level and are never fabricated down to village level.
+
+The bundled dataset (80 villages across 8 real districts — Sitapur, Barabanki, Gonda,
+Raebareli in Uttar Pradesh; Chhindwara, Betul, Sagar, Damoh in Madhya Pradesh — 6
+quarters) is a **deliberate mix of real and synthetic data**, and every source is labeled
+accordingly in the Data Explorer / `DatasetMetadata`:
+
+- **Real**: district and village/block names (Census of India 2011 District Census
+  Handbook Village Directory), and district-level NFHS-5 (2019-21) and AHS (2010-13)
+  indicators — stunting, wasting, underweight, anemia, full immunization, institutional
+  delivery, infant/under-5 mortality, total fertility rate. See
+  `backend/data/real_geo_data.py` for exact sources.
+- **Not available, not fabricated**: DLHS-4 (2012-13) excluded all EAG states, and both
+  Uttar Pradesh and Madhya Pradesh are EAG states (covered by AHS instead) — this survey
+  round simply does not exist for any of these 8 districts.
+- **Synthetic** (with deliberately embedded patterns — infrastructure-outcome paradoxes,
+  infra-poor villages, high performers, underutilized facilities, high-malnutrition
+  villages, declining immunization, improving villages, resource-overloaded facilities,
+  early-warning trends): village population, and all RHS/HMIS/Anganwadi facility- and
+  quarter-level figures. HMIS requires an authorized government login with no public
+  bulk-download, and per-village RHS/Anganwadi have no reliable public bulk source
+  either — so these are modeled, not real.
+
+The UI always distinguishes REAL, synthetic (DEMO), and PREDICTED (model-output) data —
+see the header banner and the Data Explorer page.
 
 ## Technology Stack
 
-- **Backend Framework**: FastAPI (Python)
-- **Database**: SQLite (easily upgradeable to PostgreSQL)
-- **ORM**: SQLAlchemy
-- **Data Validation**: Pydantic
-- **Architecture**: Modular Monolith
+- **Backend:** Python, FastAPI, SQLAlchemy, scikit-learn, pandas/numpy
+- **Database:** SQLite by default (zero-setup); PostgreSQL via `docker-compose.yml`
+- **Frontend:** React, TypeScript, Tailwind CSS, Recharts, Leaflet/react-leaflet, React Router
 
-## Prerequisites
+## Installation & Running Locally
 
-- Python 3.9 or higher
-- pip (Python package manager)
+### Backend
 
-## Installation
-
-1. Clone the repository or navigate to the project directory:
 ```bash
-cd /app/user_workspace/team_027/f02f5792-e4b4-4512-bd64-bf086c9d84a2
-```
-
-2. Create a virtual environment:
-```bash
+cd backend  # requirements live here, but run commands from the repo root
 python -m venv venv
-```
-
-3. Activate the virtual environment:
-   - On Linux/Mac:
-     ```bash
-     source venv/bin/activate
-     ```
-   - On Windows:
-     ```bash
-     venv\Scripts\activate
-     ```
-
-4. Install dependencies:
-```bash
+venv\Scripts\activate        # Windows
+# source venv/bin/activate   # macOS/Linux
 pip install -r backend/requirements.txt
+
+# From the repo root:
+python -m scripts.seed_db --reset   # generates demo data + runs the AI pipeline
+python -m uvicorn backend.main:app --reload --port 8000
 ```
 
-5. Set up environment variables:
-```bash
-cp .env.example .env
-```
-Edit `.env` file and update the configuration values as needed.
+API docs: http://localhost:8000/docs — the server also auto-seeds on first boot if the
+database is empty.
 
-## Running the Application
-
-### Development Mode
-
-Run the application with auto-reload enabled:
+### Frontend
 
 ```bash
-uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
+cd frontend
+npm install
+npm run dev
 ```
 
-The API will be available at: `http://localhost:8000`
+Open http://localhost:5173 — Vite proxies `/api` to `http://localhost:8000`.
 
-### Production Mode
+### Tests
 
 ```bash
-uvicorn backend.main:app --host 0.0.0.0 --port 8000 --workers 4
+python -m pytest -q
 ```
 
-## API Documentation
+### Docker (Postgres-backed)
 
-Once the application is running, access the interactive API documentation:
-
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
-
-## API Endpoints
-
-### Health Check
-- `GET /` - Root endpoint
-- `GET /health` - Health check endpoint
-
-### Villages
-- `POST /api/v1/villages` - Create a new village
-- `GET /api/v1/villages` - Get all villages (with optional filters)
-- `GET /api/v1/villages/{village_id}` - Get a specific village
-- `PUT /api/v1/villages/{village_id}` - Update a village
-- `DELETE /api/v1/villages/{village_id}` - Delete a village
-
-### Health Workers
-- `POST /api/v1/workers` - Create a new health worker
-- `GET /api/v1/workers` - Get all health workers (with optional filters)
-- `GET /api/v1/workers/{worker_id}` - Get a specific health worker
-- `PUT /api/v1/workers/{worker_id}` - Update a health worker
-- `DELETE /api/v1/workers/{worker_id}` - Delete a health worker
-
-### Health Records
-- `POST /api/v1/health-records` - Create a new health record
-- `GET /api/v1/health-records` - Get all health records (with optional filters)
-- `GET /api/v1/health-records/{record_id}` - Get a specific health record
-- `PUT /api/v1/health-records/{record_id}` - Update a health record
-- `DELETE /api/v1/health-records/{record_id}` - Delete a health record
-
-## Database
-
-The application uses SQLite by default for easy setup. The database file `rural_healthcare.db` will be created automatically in the project root when you first run the application.
-
-### Database Models
-
-1. **Village**: Stores village information including name, district, state, population, and coordinates
-2. **HealthWorker**: Manages frontline health workers with their roles and assignments
-3. **HealthRecord**: Tracks patient health records with symptoms, diagnosis, and treatment information
-
-## Environment Variables
-
-Key environment variables (see `.env.example` for full list):
-
-- `DATABASE_URL`: Database connection string
-- `SECRET_KEY`: Secret key for security (change in production)
-- `ALLOWED_ORIGINS`: CORS allowed origins
-- `LOG_LEVEL`: Logging level (INFO, DEBUG, ERROR)
-
-## Architecture Overview
-
-The application follows a **Modular Monolith** architecture with clear separation of concerns:
-
-```
-backend/
-├── main.py           # Application entry point
-├── config.py         # Configuration management
-├── database.py       # Database setup and session management
-├── models.py         # SQLAlchemy database models
-├── schemas.py        # Pydantic schemas for validation
-└── routers/          # API route handlers
-    ├── health_records.py
-    ├── villages.py
-    └── workers.py
+```bash
+docker compose up --build
 ```
 
-## Development Guidelines
+## Demo Workflow (3–5 minutes)
 
-- All API endpoints include proper error handling
-- Input validation is performed using Pydantic schemas
-- Database operations use SQLAlchemy ORM for security
-- Logging is configured for monitoring and debugging
-- CORS is configured for frontend integration
+1. **Overview** — dashboard shows Critical Villages, At-Risk Population, Emerging Risks on
+   an interactive risk map.
+2. **Village Intelligence → Village Profile** — open a flagged village: Infrastructure
+   HIGH, Utilization/Service/Nutrition LOW → **"Infrastructure-Outcome Paradox"** banner.
+3. **Risk & Prediction** — ML predicts next-quarter risk trending up; **Why?** panel shows
+   ranked contributing indicators.
+4. **Intervention Planner** — ranked, concrete interventions (never "build infrastructure"
+   first).
+5. **What-If Simulator** — compare Infrastructure Expansion vs. Mobile Medical Unit vs.
+   Targeted Outreach + Nutrition; see Before → Projected risk/utilization/immunization,
+   cost, time, coverage.
+6. **Resource Optimizer** — define the quarter's budget/workforce/MMU/vaccine pool; see it
+   allocated across the highest-priority villages with projected aggregate impact.
+7. **Methodology** — every formula and threshold above, disclosed.
 
-## Security Features
+## Data Limitations
 
-- Input validation on all endpoints
-- SQL injection prevention through ORM
-- Environment-based configuration
-- Secure password handling ready (for future authentication)
-- CORS configuration for controlled access
+- Bundled data is **synthetic** for demonstration; it is not official government
+  statistics.
+- District-level indicators (NFHS/DLHS/AHS) are never fabricated to village granularity —
+  the Outcome Score is an explicitly-labeled modeled proxy blending village HMIS with
+  district survey data.
+- The resource optimizer is a fast, explainable greedy heuristic, not an exact
+  optimization solver.
+- This is a decision-support tool, not a medical diagnosis system — it never recommends
+  medication dosages or makes clinical decisions.
 
-## Future Enhancements
+## Future Scope
 
-- User authentication and authorization
-- Advanced analytics and reporting
-- Mobile application for field workers
-- Real-time notifications and alerts
-- Integration with government health systems
-- Predictive analytics for preventive care
+- Real OGD (Open Government Data) ingestion for RHS/HMIS/NFHS/DLHS/AHS/Anganwadi at scale
+- Live IBM watsonx.ai integration for richer decision-brief narration
+- Marker clustering and satellite basemaps for large-scale district maps
+- Role-based access (District Health Officer / Block Medical Officer / Anganwadi worker views)
+- An exact (LP/MILP) resource-allocation solver alongside the current greedy heuristic
 
-## Support
+---
 
-For issues, questions, or contributions, please contact the development team.
-
-## License
-
-[Specify your license here]
+*Built for the IBM Bob National Hackathon Finals.*

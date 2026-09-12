@@ -1,112 +1,292 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List, Dict
 from datetime import datetime
 
 
-# Village Schemas
-class VillageBase(BaseModel):
-    name: str = Field(..., min_length=1, max_length=100)
-    district: str = Field(..., min_length=1, max_length=100)
-    state: str = Field(..., min_length=1, max_length=100)
-    population: int = Field(..., gt=0)
-    latitude: Optional[float] = None
-    longitude: Optional[float] = None
-
-
-class VillageCreate(VillageBase):
-    pass
-
-
-class VillageUpdate(BaseModel):
-    name: Optional[str] = Field(None, min_length=1, max_length=100)
-    district: Optional[str] = Field(None, min_length=1, max_length=100)
-    state: Optional[str] = Field(None, min_length=1, max_length=100)
-    population: Optional[int] = Field(None, gt=0)
-    latitude: Optional[float] = None
-    longitude: Optional[float] = None
-
-
-class VillageResponse(VillageBase):
+# ---------------------------------------------------------------------------
+# Geography
+# ---------------------------------------------------------------------------
+class DistrictOut(BaseModel):
     id: int
-    created_at: datetime
-    updated_at: datetime
-    
+    name: str
+    state_name: str
+    population: Optional[int] = None
+
     class Config:
         from_attributes = True
 
 
-# Health Worker Schemas
-class HealthWorkerBase(BaseModel):
-    name: str = Field(..., min_length=1, max_length=100)
-    role: str = Field(..., min_length=1, max_length=50)
-    phone: str = Field(..., min_length=10, max_length=15)
-    email: Optional[str] = Field(None, max_length=100)
-    village_id: int = Field(..., gt=0)
-    is_active: bool = True
-
-
-class HealthWorkerCreate(HealthWorkerBase):
-    pass
-
-
-class HealthWorkerUpdate(BaseModel):
-    name: Optional[str] = Field(None, min_length=1, max_length=100)
-    role: Optional[str] = Field(None, min_length=1, max_length=50)
-    phone: Optional[str] = Field(None, min_length=10, max_length=15)
-    email: Optional[str] = Field(None, max_length=100)
-    village_id: Optional[int] = Field(None, gt=0)
-    is_active: Optional[bool] = None
-
-
-class HealthWorkerResponse(HealthWorkerBase):
+class FacilityOut(BaseModel):
     id: int
-    created_at: datetime
-    updated_at: datetime
-    
+    name: str
+    facility_type: str
+    village_id: Optional[int]
+    latitude: Optional[float]
+    longitude: Optional[float]
+    doctors_sanctioned: int
+    doctors_in_position: int
+    nurses_sanctioned: int
+    nurses_in_position: int
+    beds: int
+    monthly_patient_capacity: int
+    has_medicine_stock: int
+
     class Config:
         from_attributes = True
 
 
-# Health Record Schemas
-class HealthRecordBase(BaseModel):
-    patient_name: str = Field(..., min_length=1, max_length=100)
-    patient_age: int = Field(..., ge=0, le=150)
-    patient_gender: str = Field(..., min_length=1, max_length=10)
-    patient_phone: Optional[str] = Field(None, max_length=15)
-    condition: str = Field(..., min_length=1, max_length=200)
-    symptoms: Optional[str] = None
-    diagnosis: Optional[str] = None
-    treatment: Optional[str] = None
-    status: str = Field(default="active", max_length=50)
-    priority: str = Field(default="normal", max_length=20)
-    village_id: int = Field(..., gt=0)
-    worker_id: int = Field(..., gt=0)
+# ---------------------------------------------------------------------------
+# Gap Index / Village
+# ---------------------------------------------------------------------------
+class GapScoreOut(BaseModel):
+    quarter: str
+    infrastructure_score: float
+    workforce_score: float
+    service_score: float
+    utilization_score: float
+    outcome_score: float
+    nutrition_score: float
+    accessibility_score: float
+    overall_gap_score: float
+    risk_category: str
+    is_paradox: bool
+    paradox_note: Optional[str] = None
 
-
-class HealthRecordCreate(HealthRecordBase):
-    pass
-
-
-class HealthRecordUpdate(BaseModel):
-    patient_name: Optional[str] = Field(None, min_length=1, max_length=100)
-    patient_age: Optional[int] = Field(None, ge=0, le=150)
-    patient_gender: Optional[str] = Field(None, min_length=1, max_length=10)
-    patient_phone: Optional[str] = Field(None, max_length=15)
-    condition: Optional[str] = Field(None, min_length=1, max_length=200)
-    symptoms: Optional[str] = None
-    diagnosis: Optional[str] = None
-    treatment: Optional[str] = None
-    status: Optional[str] = Field(None, max_length=50)
-    priority: Optional[str] = Field(None, max_length=20)
-    village_id: Optional[int] = Field(None, gt=0)
-    worker_id: Optional[int] = Field(None, gt=0)
-
-
-class HealthRecordResponse(HealthRecordBase):
-    id: int
-    visit_date: datetime
-    created_at: datetime
-    updated_at: datetime
-    
     class Config:
         from_attributes = True
+
+
+class VillageSummary(BaseModel):
+    id: int
+    name: str
+    district_name: str
+    block_name: str
+    state_name: str
+    population: int
+    latitude: Optional[float]
+    longitude: Optional[float]
+    is_demo: bool
+    overall_gap_score: Optional[float] = None
+    risk_category: Optional[str] = None
+    is_paradox: Optional[bool] = None
+    priority_tier: Optional[str] = None
+
+
+class VillageDetail(VillageSummary):
+    gap_breakdown: Optional[GapScoreOut] = None
+    trend: List[GapScoreOut] = []
+    facilities: List[FacilityOut] = []
+
+
+# ---------------------------------------------------------------------------
+# Risk / Prediction / Explanation
+# ---------------------------------------------------------------------------
+class RiskFactorOut(BaseModel):
+    factor_name: str
+    contribution_pct: float
+    direction: str
+
+    class Config:
+        from_attributes = True
+
+
+class RiskPredictionOut(BaseModel):
+    village_id: int
+    quarter: str
+    current_risk: float
+    predicted_risk: float
+    prediction_horizon: str
+    risk_category: str
+    confidence: float
+    trend_direction: str
+    insufficient_data: bool
+    factors: List[RiskFactorOut] = []
+
+    class Config:
+        from_attributes = True
+
+
+class ExplanationOut(BaseModel):
+    village_id: int
+    village_name: str
+    headline: str
+    narrative: str
+    drivers: List[RiskFactorOut]
+    is_paradox: bool
+    generated_by: str  # "template" | "watsonx"
+
+
+# ---------------------------------------------------------------------------
+# Priority
+# ---------------------------------------------------------------------------
+class PriorityOut(BaseModel):
+    village_id: int
+    village_name: str
+    district_name: str
+    priority_score: float
+    priority_tier: str
+    risk_score: float
+    population_affected: int
+    rank: int
+
+    class Config:
+        from_attributes = True
+
+
+# ---------------------------------------------------------------------------
+# Interventions
+# ---------------------------------------------------------------------------
+class InterventionOptionOut(BaseModel):
+    id: int
+    problem_tag: str
+    intervention_name: str
+    category: str
+    cost_level: str
+    cost_estimate_inr: float
+    time_months: float
+    expected_impact_score: float
+    impact_per_resource: float
+    coverage_population: int
+    is_infrastructure_expansion: bool
+    rank: Optional[int]
+
+    class Config:
+        from_attributes = True
+
+
+# ---------------------------------------------------------------------------
+# Simulation
+# ---------------------------------------------------------------------------
+class SimulationRequest(BaseModel):
+    village_id: int
+    scenario_name: str = "Custom Scenario"
+    intervention_ids: List[int] = Field(default_factory=list)
+    healthcare_workers: int = 0
+    mobile_medical_units: int = 0
+    vaccine_doses: int = 0
+    medicine_units: int = 0
+    outreach_camps_per_quarter: int = 0
+    budget_inr: float = 0.0
+
+
+class SimulationResultOut(BaseModel):
+    village_id: int
+    scenario_name: str
+    baseline_risk: float
+    projected_risk: float
+    baseline_utilization_pct: float
+    projected_utilization_pct: float
+    baseline_immunization_pct: float
+    projected_immunization_pct: float
+    cost_estimate_inr: float
+    time_months: float
+    population_covered: int
+    disclaimer: str = "Model-estimated / projected impact — requires field validation. Not a guaranteed outcome."
+
+
+# ---------------------------------------------------------------------------
+# Resource Optimization
+# ---------------------------------------------------------------------------
+class ResourcePoolIn(BaseModel):
+    name: str = "Planning Session"
+    budget_inr: float = 0.0
+    doctors: int = 0
+    nurses: int = 0
+    anms: int = 0
+    ashas: int = 0
+    mobile_medical_units: int = 0
+    vaccine_doses: int = 0
+    medicine_units: int = 0
+    outreach_camps: int = 0
+
+
+class ResourceAllocationOut(BaseModel):
+    village_id: int
+    village_name: str
+    intervention_name: Optional[str]
+    allocated_budget_inr: float
+    allocated_mmus: int
+    allocated_vaccine_doses: int
+    allocated_medicine_units: int
+    allocated_workers: int
+    expected_impact_score: float
+    population_covered: int
+    rank: int
+
+
+class ResourceOptimizationResult(BaseModel):
+    pool: ResourcePoolIn
+    allocations: List[ResourceAllocationOut]
+    remaining_budget_inr: float
+    remaining_mmus: int
+    remaining_vaccine_doses: int
+    remaining_medicine_units: int
+    total_expected_impact: float
+    total_population_covered: int
+
+
+# ---------------------------------------------------------------------------
+# Resource wastage / mismatch
+# ---------------------------------------------------------------------------
+class FacilityMismatchOut(BaseModel):
+    facility_id: int
+    facility_name: str
+    facility_type: str
+    village_name: Optional[str]
+    doctors_in_position: int
+    utilization_pct: Optional[float]
+    mismatch_type: str  # OVERLOADED / UNDERUTILIZED / UNDER_RESOURCED / BALANCED
+    note: str
+
+
+# ---------------------------------------------------------------------------
+# Early warning
+# ---------------------------------------------------------------------------
+class EarlyWarningOut(BaseModel):
+    village_id: int
+    village_name: str
+    indicator: str
+    trend_values: List[float]
+    quarters: List[str]
+    direction: str  # worsening / improving / stable
+    message: str
+    periods_to_threshold: Optional[int] = None
+
+
+# ---------------------------------------------------------------------------
+# Data ingestion
+# ---------------------------------------------------------------------------
+class DatasetMetadataOut(BaseModel):
+    id: int
+    source_name: str
+    file_name: Optional[str]
+    granularity: str
+    row_count: int
+    is_demo: bool
+    uploaded_at: datetime
+    notes: Optional[str]
+
+    class Config:
+        from_attributes = True
+
+
+class UploadResponse(BaseModel):
+    success: bool
+    message: str
+    dataset: Optional[DatasetMetadataOut] = None
+    errors: List[str] = []
+
+
+# ---------------------------------------------------------------------------
+# Dashboard KPIs
+# ---------------------------------------------------------------------------
+class DashboardKPIs(BaseModel):
+    critical_villages: int
+    emerging_risk_villages: int
+    at_risk_population: int
+    high_risk_facilities: int
+    total_villages: int
+    resource_utilization_pct: float
+    potential_impact_score: float
+    is_demo_data: bool
+    quarter: str

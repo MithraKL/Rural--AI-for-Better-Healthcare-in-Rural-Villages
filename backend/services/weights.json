@@ -1,0 +1,10 @@
+{
+  "infrastructure": 0.12,
+  "workforce": 0.13,
+  "service": 0.15,
+  "utilization": 0.15,
+  "outcome": 0.20,
+  "nutrition": 0.15,
+  "accessibility": 0.10,
+  "_comment": "Weights used to combine the seven normalized (0-100) dimension scores into the overall Healthcare Gap / Risk Score. Must sum to 1.0. Editable without code changes; surfaced on the Methodology page for transparency."
+}

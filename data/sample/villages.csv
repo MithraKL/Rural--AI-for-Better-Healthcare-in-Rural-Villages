@@ -1,0 +1,81 @@
+id,name,block_id,district_id,state,population,latitude,longitude,distance_to_facility_km,has_all_weather_road
+1,Abdipur,1,1,Uttar Pradesh,7954,28.70706,81.07546,7.97,1
+2,Akabarpur,1,1,Uttar Pradesh,6128,26.08897,78.88556,2.88,1
+3,Akohra,1,1,Uttar Pradesh,7015,25.05575,79.41862,4.91,1
+4,Allipur,1,1,Uttar Pradesh,2928,28.11599,79.03821,5.84,1
+5,Amanullapur,1,1,Uttar Pradesh,6981,26.83419,80.26926,3.64,1
+6,Adora,2,1,Uttar Pradesh,5064,28.68423,80.51453,2.7,1
+7,Adori,2,1,Uttar Pradesh,12218,26.91002,81.54573,3.68,1
+8,Amlia,2,1,Uttar Pradesh,9647,27.61376,79.69753,6.37,1
+9,Andapur,2,1,Uttar Pradesh,9863,25.31243,78.61934,3.22,1
+10,Bada Gaon,2,1,Uttar Pradesh,5378,25.18069,80.42597,3.47,1
+11,Agasand,3,2,Uttar Pradesh,10032,27.90472,80.3444,1.53,1
+12,Ahamad Nagar,3,2,Uttar Pradesh,5400,25.77036,79.11585,2.83,1
+13,Akbarpur,3,2,Uttar Pradesh,7444,25.19784,80.90623,1.9,1
+14,Akhaipur,3,2,Uttar Pradesh,1274,27.25069,81.52216,1.16,1
+15,Alampur,3,2,Uttar Pradesh,4971,25.75745,79.64419,6.88,1
+16,Achaicha,4,2,Uttar Pradesh,5280,26.39069,81.15012,2.52,1
+17,Agauli,4,2,Uttar Pradesh,14705,28.65314,79.06022,11.18,0
+18,Ahmadpur,4,2,Uttar Pradesh,4632,28.18093,82.34251,4.84,1
+19,Allahapur Bharali,4,2,Uttar Pradesh,10071,26.18008,80.77534,0.84,1
+20,Asohna,4,2,Uttar Pradesh,13728,26.10012,78.75979,5.64,1
+21,Achal Nagar,5,3,Uttar Pradesh,12193,27.60318,78.9636,0.62,1
+22,Achlapur,5,3,Uttar Pradesh,14336,27.84144,81.35435,1.53,1
+23,Achlapur Bargadhi,5,3,Uttar Pradesh,7822,25.62517,78.91661,2.44,1
+24,Adbadwa,5,3,Uttar Pradesh,7141,26.88656,80.44418,8.39,1
+25,Akbarpur,5,3,Uttar Pradesh,14593,25.75797,78.9957,2.51,1
+26,Ahrolia,6,3,Uttar Pradesh,4532,27.08857,80.70901,2.88,1
+27,Akdega,6,3,Uttar Pradesh,9885,27.61027,78.99764,6.75,1
+28,Ameha,6,3,Uttar Pradesh,13493,25.95514,81.18561,9.91,1
+29,Amreebharia Khas,6,3,Uttar Pradesh,4009,25.86653,81.26754,2.38,1
+30,Arjunpur,6,3,Uttar Pradesh,5854,25.64748,78.87427,6.71,1
+31,Amawa,7,4,Uttar Pradesh,7913,27.19555,79.14135,5.38,1
+32,Ashan Jagatpur,7,4,Uttar Pradesh,1755,25.82104,80.31446,8.79,1
+33,Bachhrawan,7,4,Uttar Pradesh,9711,26.02932,80.46605,3.86,0
+34,Bahadur Nagar,7,4,Uttar Pradesh,14111,26.93387,80.63343,2.47,1
+35,Bahadurpur,7,4,Uttar Pradesh,933,25.14522,81.92066,4.73,1
+36,Aimapur,8,4,Uttar Pradesh,13487,27.47886,79.70502,1.52,1
+37,Badaver,8,4,Uttar Pradesh,5035,28.24876,81.94293,1.92,1
+38,Bahuda Kalan,8,4,Uttar Pradesh,14624,26.51999,80.80329,9.15,1
+39,Bahuda Khurd,8,4,Uttar Pradesh,12653,26.34795,81.1482,3.38,1
+40,Baiti,8,4,Uttar Pradesh,8126,27.48045,80.36817,12.95,0
+41,Aliwada,9,5,Madhya Pradesh,13724,22.69699,78.46742,3.86,1
+42,Amdhana,9,5,Madhya Pradesh,1672,22.87409,76.14536,12.43,0
+43,Anhoni,9,5,Madhya Pradesh,3724,26.97835,77.4753,6.49,1
+44,Babai Pathar,9,5,Madhya Pradesh,10866,26.07751,79.9654,10.54,0
+45,Bakhari,9,5,Madhya Pradesh,14922,22.59065,78.37667,5.07,1
+46,Acharkund,10,5,Madhya Pradesh,11400,24.07377,77.63585,19.9,0
+47,Aharwada,10,5,Madhya Pradesh,2292,25.30292,79.77513,4.14,1
+48,Amari,10,5,Madhya Pradesh,3161,26.37449,77.3685,9.71,0
+49,Andol,10,5,Madhya Pradesh,8632,25.22043,77.98667,1.25,1
+50,Ankhawadi,10,5,Madhya Pradesh,10902,23.46688,77.18932,15.01,0
+51,Adarsh Dhanora,11,6,Madhya Pradesh,6682,24.32551,77.0414,1.48,1
+52,Amadhana,11,6,Madhya Pradesh,6708,22.2579,80.66538,1.53,1
+53,Amapathar,11,6,Madhya Pradesh,1140,24.64157,79.28946,0.56,1
+54,Anki Raiyat,11,6,Madhya Pradesh,8009,26.29855,77.90938,3.87,1
+55,Bagda Biran,11,6,Madhya Pradesh,13622,22.94473,77.18993,5.37,1
+56,Adaumar,12,6,Madhya Pradesh,11946,24.86548,80.99432,7.48,1
+57,Ambhori,12,6,Madhya Pradesh,4155,25.76069,79.49121,2.71,1
+58,Amla,12,6,Madhya Pradesh,12894,26.33791,77.86507,0.99,1
+59,Badgaon,12,6,Madhya Pradesh,3484,26.33029,77.21784,6.1,1
+60,Balner,12,6,Madhya Pradesh,7456,22.88201,79.56248,6.45,0
+61,Agasod,13,7,Madhya Pradesh,10010,25.43913,80.8169,6.31,1
+62,Amkheda,13,7,Madhya Pradesh,2426,23.87275,76.32539,8.91,1
+63,Bagaspur,13,7,Madhya Pradesh,14500,24.5296,78.49162,3.45,1
+64,Bagdawli,13,7,Madhya Pradesh,14855,25.98008,80.02247,1.8,1
+65,Balarkhedi,13,7,Madhya Pradesh,1839,25.96599,76.77756,5.15,1
+66,Achanwara,14,7,Madhya Pradesh,11601,26.2394,76.06123,1.32,1
+67,Alkhedi,14,7,Madhya Pradesh,11913,23.33691,76.46673,3.2,1
+68,Asoli,14,7,Madhya Pradesh,4346,24.29243,78.47079,2.64,1
+69,Bachhu,14,7,Madhya Pradesh,14322,24.03626,79.31997,7.7,1
+70,Badoli,14,7,Madhya Pradesh,3129,26.63142,76.06924,3.59,1
+71,Abda,15,8,Madhya Pradesh,3570,26.45081,78.27231,9.84,0
+72,Achalpura,15,8,Madhya Pradesh,8352,23.3526,76.22385,6.51,1
+73,Adanwara,15,8,Madhya Pradesh,4489,25.46277,77.8715,4.72,1
+74,Amajhir,15,8,Madhya Pradesh,10837,22.72226,79.2309,5.74,1
+75,Bachhama,15,8,Madhya Pradesh,11843,22.1723,77.12117,2.75,1
+76,Bagha,16,8,Madhya Pradesh,2712,22.09775,76.80364,6.49,1
+77,Bagsari,16,8,Madhya Pradesh,8947,25.95325,78.7723,5.23,1
+78,Bamanpura,16,8,Madhya Pradesh,3162,26.55744,80.86453,8.01,1
+79,Bamhori Kudai,16,8,Madhya Pradesh,10253,25.5334,79.81662,6.16,1
+80,Bamni,16,8,Madhya Pradesh,3741,25.2411,79.88613,7.96,0
